@@ -581,6 +581,11 @@ public class PContourCreator implements ContourCreator {
         init();
         reset();
 
+        if (contourCheck == null || contourCheck.length < pixels.length) {
+            contourCheck = new int[pixels.length];
+        }
+        contourCheckValue++;
+
         this.pixels = pixels;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
@@ -588,7 +593,8 @@ public class PContourCreator implements ContourCreator {
 
     @Override
     public boolean checkForExistingBlob(int index, int x, int y) {
-        return pointOnEdgeBlob(x, y, 0.5f) || pointOnEdgeRejectedBlob(x, y, 0.5f);
+        //return pointOnEdgeBlob(x, y, 0.5f) || pointOnEdgeRejectedBlob(x, y, 0.5f);
+        return contourCheck[index] == contourCheckValue;
     }
 
     @Override
@@ -669,6 +675,7 @@ public class PContourCreator implements ContourCreator {
 
     @Override
     public void addToEdgeIndexes(int index) {
+        contourCheck[index] = contourCheckValue;
         if (computeEdgeData) {
             currentBlob.addToEdgeIndexes(index);
         }
