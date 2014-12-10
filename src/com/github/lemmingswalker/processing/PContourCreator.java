@@ -24,7 +24,6 @@ public class PContourCreator implements ContourCreator {
     // the array can be much bigger then the actual blobs
     // so we keep a count
     protected int nOfBlobs;
-    private int nOfRejectedBlobs;
 
     PContour lastGivenBlob;
 
@@ -238,20 +237,6 @@ public class PContourCreator implements ContourCreator {
         edgeVectorsDivisor.reset();
         nOfBlobs = 0;
 
-        // we need to reset rejected for now
-        // (another way could be a integer passiveRejectedBlobs and activeRejectedBlobs)
-
-        if (blobs != null) {
-
-            for (int i = blobs.size() - 1; i >= blobs.size() - nOfRejectedBlobs; i--) {
-                //System.out.println("rejected: " + blobs.get(i).rejected);
-                blobs.get(i).rejected = false;
-
-            }
-        }
-
-        nOfRejectedBlobs = 0;
-
         lastGivenBlob = null;
 
         containingBlobsComputed = false;
@@ -292,21 +277,11 @@ public class PContourCreator implements ContourCreator {
 
         init();
 
-        if (nOfBlobs+nOfRejectedBlobs >= blobs.size()) {
+        if (nOfBlobs >= blobs.size()) {
             blobs.add(new PContour(this));
-
-            blobComparator.setCompareType(PContourComparator.CompareType.REJECTED)
-                    .setSortTypeAscending(false);
-
-            Collections.sort(blobs, blobComparator);
-
         }
 
         lastGivenBlob = blobs.get(nOfBlobs++);
-
-        if (lastGivenBlob.rejected) {
-            System.err.println("Bug in getOrCreateBlob, returning a rejected blob");
-        }
 
         return lastGivenBlob;
     }
@@ -321,23 +296,6 @@ public class PContourCreator implements ContourCreator {
 
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
-    protected void rejectLastGivenBlob () {
-
-        if (lastGivenBlob != null) {
-            lastGivenBlob.rejected = true;
-            nOfRejectedBlobs++;
-            nOfBlobs--;
-
-            blobComparator.setCompareType(PContourComparator.CompareType.REJECTED)
-                    .setSortTypeAscending(false);
-
-            Collections.sort(blobs, blobComparator);
-
-        }
-    }
-
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
     public boolean pointOnEdgeBlob(int x, int y, float edgeHitEpsilon) {
 
         init();
@@ -348,22 +306,6 @@ public class PContourCreator implements ContourCreator {
         }
         return false;
     }
-
-
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-    public boolean pointOnEdgeRejectedBlob(int x, int y, float edgeHitEpsilon) {
-
-        init();
-
-        for (int i = blobs.size()-1; i >= blobs.size()-nOfRejectedBlobs; i--) {
-            PContour b = blobs.get(i);
-            if (b.edgeHit(x, y, edgeHitEpsilon)) return true;
-        }
-        return false;
-    }
-
-
 
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
@@ -612,9 +554,6 @@ public class PContourCreator implements ContourCreator {
 
     @Override
     public void finishedContour() {
-        // todo
-        // check for w and h,
-        // based on this reject or not
 
         currentBlob.prepareForUse();
 
@@ -655,7 +594,7 @@ public class PContourCreator implements ContourCreator {
                 // we will only do it for blobs that are to large
                 // blobs that are to small don't take long to recreate anyway
                 if (currentBlob.getWidth() > maxContourWidth || currentBlob.getHeight() > maxContourHeight ) {
-                    rejectLastGivenBlob();
+                    returnLastGivenBlob();
                 }
             }
         }

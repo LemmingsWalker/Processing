@@ -18,7 +18,6 @@ public class PContourComparator implements Comparator<PContour> {
     public enum CompareType {
         BOUNDING_AREA,
         DEPTH,
-        REJECTED
     }
 
     //SortType sortType;
@@ -84,8 +83,6 @@ public class PContourComparator implements Comparator<PContour> {
                     return compareBoundingAreaAsc(blob, blob2);
                 case DEPTH:
                     return compareDepthAsc(blob, blob2);
-                case REJECTED:
-                    return compareRejectedAsc(blob, blob2);
                 default:
                     return compareBoundingAreaAsc(blob, blob2);
             }
@@ -95,8 +92,6 @@ public class PContourComparator implements Comparator<PContour> {
                     return compareBoundingAreaDes(blob, blob2);
                 case DEPTH:
                     return compareDepthDes(blob, blob2);
-                case REJECTED:
-                    return compareRejectedDes(blob, blob2);
                 default:
                     return compareBoundingAreaDes(blob, blob2);
             }
@@ -170,22 +165,6 @@ public class PContourComparator implements Comparator<PContour> {
         else {
             return 0;
         }
-    }
-
-    // . . . . . . . . . . . . . . . . . . . . . . . . .
-
-
-    public int compareRejectedAsc(PContour blob, PContour blob2) {
-
-        return (blob.rejected == blob2.rejected ? 0 : (blob2.rejected ? 1 : -1));
-
-    }
-
-    // . . . . . . . . . . . . . . . . . . . . . . . . .
-
-    public int compareRejectedDes(PContour blob, PContour blob2) {
-
-        return (blob.rejected == blob2.rejected ? 0 : (blob2.rejected ? -1 : 1));
     }
 
     // . . . . . . . . . . . . . . . . . . . . . . . . .

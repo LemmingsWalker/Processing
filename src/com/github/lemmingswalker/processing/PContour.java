@@ -42,11 +42,6 @@ public class PContour {
 
     protected int minX, minY, maxX, maxY;
 
-    // a blob can be rejected when it's too small or too big
-    // but we still use rejected blobs for finding blobs
-    // so we flag it as rejected
-    boolean rejected;
-
     // used to decide if it's a outer contour (only minX...)
     public int minXCornerPixelIndex, minYCornerPixelIndex, maxXCornerPixelIndex, maxYCornerPixelIndex;
 
@@ -184,9 +179,6 @@ public class PContour {
         //edgeVectors = null;
         cornerVectorsGetter = null;
         edgeVectorsGetter = null;
-
-        rejected = false;
-
 
     }
 
