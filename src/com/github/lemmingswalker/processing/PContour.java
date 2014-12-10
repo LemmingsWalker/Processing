@@ -94,19 +94,7 @@ public class PContour {
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
     protected void setImageSize(int width, int height) {
-        setImageWidth(width);
-        setImageHeight(height);
-    }
-
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-    protected void setImageWidth(int width) {
         imageWidth = width;
-    }
-
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-    protected void setImageHeight(int height) {
         imageHeight = height;
     }
 
