@@ -20,7 +20,7 @@ import static processing.core.PConstants.*;
 public class PContour {
 
 
-    // why do we save this?
+    // no use atm
     int scanningStartIndex;
 
     PContourCreator pBlobCreator;
@@ -29,13 +29,9 @@ public class PContour {
     int imageHeight;
 
     // subList
-    //List<PVector> cornerVectors;
     SubListGetter<PVector> cornerVectorsGetter;
-    //boolean cornerVectorsComputed;
     boolean preparedForUse;
 
-    // subList
-    //List<PVector> edgeVectors;
     SubListGetter<PVector> edgeVectorsGetter;
     boolean edgeVectorsComputed;
 
@@ -153,7 +149,6 @@ public class PContour {
     protected void reset() {
 
         edgeVectorsComputed = false;
-        //cornerVectorsComputed = false;
         preparedForUse = false;
 
         imageWidth = -1;
@@ -163,8 +158,6 @@ public class PContour {
         // since we will return a subList
         // but let's set it to null for now
 
-        //cornerVectors = null;
-        //edgeVectors = null;
         cornerVectorsGetter = null;
         edgeVectorsGetter = null;
 
@@ -342,7 +335,6 @@ public class PContour {
     // . . . . . . . . . . . . . . . . . . . . . . .
 
     public ArrayList<PContour> getContainingBlobs() {
-        //checkForContainingBlobsComputed("getContainingBlobs");
         pBlobCreator.computeContainingBlobs();
         return containingBlobs;
     }
@@ -351,7 +343,6 @@ public class PContour {
     // . . . . . . . . . . . . . . . . . . . . . . .
 
     public ArrayList<PContour> getEnclosedBlobs() {
-        //checkForEnclosedBlobsComputed("getEnclosedBlobs");
         pBlobCreator.computeEnclosedBlobs();
         return enclosedBlobs;
     }
@@ -362,12 +353,9 @@ public class PContour {
     // . . . . . . . . . . . . . . . . . . . . . . .
 
 
-   /*
-    It should already be sure that this blob really contains the blob to add.
-    This method takes care of the hierarchy
-    */
     protected void addContainingBlob(PContour blobToAdd, int debugDepth) {
-
+        // It should already be sure that this blob really contains the blob to add.
+        // This method takes care of the hierarchy
 
         //PApplet.println(debugDepth);
 
@@ -380,21 +368,15 @@ public class PContour {
             return;
         }
 
+        // first check if we already have a containing blob that
+        // can hold the one we like to add
         Rectangle2D r1 = new Rectangle.Float();
-
         r1.setRect(blobToAdd.getMinX(), blobToAdd.getMinY(), blobToAdd.getWidth(), blobToAdd.getHeight());
 
         Rectangle2D r2 = new Rectangle.Float();
 
-        // first check if we already have a containing blob that
-        // can hold the one we like to add
-       // PApplet.println(containingBlobs.size());
-
         for (PContour b : containingBlobs) {
             r2.setRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
-
-            //PApplet.println(r1.getMinX(), r1.getMinY(), r1.getWidth(), r1.getHeight());
-            //PApplet.println(r2.getMinX(), r2.getMinY(), r2.getWidth(), r2.getHeight());
 
             if (r2.contains(r1)) {
                 b.addContainingBlob(blobToAdd, debugDepth+1);
@@ -427,30 +409,6 @@ public class PContour {
 
     // . . . . . . . . . . . . . . . . . . . . . . .
 
-
-//    private void checkForContainingBlobsComputed(String methodName) {
-//
-//        if (!containingBlobsComputed) {
-//            System.err.println("ERROR in "+methodName+", containing blobs blobs are not computed!");
-//            //System.exit(1);
-//        }
-//
-//    }
-//
-//    // . . . . . . . . . . . . . . . . . . . . . . .
-//
-//
-//    private void checkForEnclosedBlobsComputed(String methodName) {
-//
-//        if (!enclosedBlobsComputed) {
-//            System.err.println("ERROR in "+this.getClass().getName()+"."+methodName+", enclosed blobs blobs are not computed!");
-//           //System.exit(1);
-//        }
-//
-//    }
-
-    // . . . . . . . . . . . . . . . . . . . . . . .
-
     protected void computeDepth(int depth) {
 
         this.depth = depth;
@@ -465,7 +423,6 @@ public class PContour {
     // . . . . . . . . . . . . . . . . . . . . . . .
 
     public int getDepth() {
-        //checkForEnclosedBlobsComputed("getDepth");
         pBlobCreator.computeEnclosedBlobs();
         return depth;
 
@@ -474,7 +431,6 @@ public class PContour {
     // . . . . . . . . . . . . . . . . . . . . . . .
 
     public boolean hasParent() {
-        //checkForEnclosedBlobsComputed("hasParent");
         pBlobCreator.computeEnclosedBlobs();
         return enclosingParent == null ? false : true;
     }
@@ -483,7 +439,6 @@ public class PContour {
     // . . . . . . . . . . . . . . . . . . . . . . .
 
     public boolean hasChildren() {
-        //checkForEnclosedBlobsComputed("hasChildren");
         pBlobCreator.computeEnclosedBlobs();
         return enclosedBlobs.size() > 0 ? true : false;
     }
