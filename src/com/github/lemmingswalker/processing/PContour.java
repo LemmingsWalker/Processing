@@ -283,6 +283,13 @@ public class PContour {
                 maxYCornerPixelIndex = cornerIndex;
             }
 
+            // let's set z to 0
+            // so it doesn't confuse the user
+            // and gives him the control of using the z value
+            // if we want to give the user access to the pixel index
+            // then in this method would be a good place
+            v.z = 0;
+
         }
 
         // set min and max xy
