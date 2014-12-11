@@ -78,9 +78,8 @@ public class PContourCreator implements ContourCreator {
     PContour currentBlob;
 
     // we use this to check if it's an outer blob or not
-    int[] pixels;
-
-    int imageWidth, imageHeight;
+    //int[] pixels;
+    //int imageWidth, imageHeight;
 
 
     // we store here for every edge index the contourCheckValue
@@ -517,9 +516,9 @@ public class PContourCreator implements ContourCreator {
         }
         contourCheckValue++;
 
-        this.pixels = pixels;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
+        //this.pixels = pixels;
+        //this.imageWidth = imageWidth;
+        //this.imageHeight = imageHeight;
     }
 
     @Override
@@ -529,7 +528,7 @@ public class PContourCreator implements ContourCreator {
     }
 
     @Override
-    public void startContour(int startIndex) {
+    public void startContour(int startIndex, int[] pixels, int imageWidth, int imageHeight) {
        currentBlob = getOrCreateBlob();
        currentBlob.reset();
        currentBlob.scanningStartIndex = startIndex;
@@ -542,7 +541,7 @@ public class PContourCreator implements ContourCreator {
     }
 
     @Override
-    public void finishedContour() {
+    public void finishContour(int[] pixels, int imageWidth, int imageHeight) {
 
         currentBlob.prepareForUse();
 
