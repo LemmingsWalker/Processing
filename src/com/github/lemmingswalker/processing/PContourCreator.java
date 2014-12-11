@@ -123,17 +123,6 @@ public class PContourCreator implements ContourCreator {
     }
 
 
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-    public void report() {
-
-        System.out.println("blobs.size(): "+blobs.size());
-        System.out.println("cornerVectorsDivisor.size(): "+cornerVectorsDivisor.list.size());
-        System.out.println("cornerVectorsNormalizedDivisor.size(): "+cornerVectorsNormalizedDivisor.list.size());
-        System.out.println("edgeVectorsDivisor.size(): "+edgeVectorsDivisor.list.size());
-
-    }
-
 
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 

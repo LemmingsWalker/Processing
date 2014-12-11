@@ -42,13 +42,6 @@ public class PContourFinder extends ContourFinder {
     // . . . . . . . . . . . . . . . . . . . . . . . .
 
 
-    public void report() {
-        pContourCreator.report();
-    }
-
-    // . . . . . . . . . . . . . . . . . . . . . . . .
-
-
 
     public void drawScanLines(PGraphics g, int w, int h) {
 
