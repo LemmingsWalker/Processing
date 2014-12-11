@@ -27,8 +27,8 @@ public class PContourFinder extends ContourFinder {
 
     // . . . . . . . . . . . . . . . . . . . . . . . .
 
+    // up to the user to load pixels
     public void scan(PImage img) {
-        img.loadPixels();
         scan(img.pixels, img.width, img.height);
     }
 
