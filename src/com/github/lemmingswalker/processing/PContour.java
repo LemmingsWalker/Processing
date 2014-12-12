@@ -245,7 +245,7 @@ public class PContour {
 
         // todo, some check if setComputeEdgeData was set BEFORE THE SCAN HAPPENED!
         // maybe throw an error
-        if (!pBlobCreator.computeEdgeData) {
+        if (!pBlobCreator.isComputeEdgeData()) {
             System.err.println("Error: computeEdgeData is false, maybe you need to set blobData.setComputeEdgeData(true)?");
             return null;
         }
