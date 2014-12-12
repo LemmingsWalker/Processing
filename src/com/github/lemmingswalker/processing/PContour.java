@@ -59,8 +59,6 @@ public class PContour {
     // todo, disabled for now until basics work again
     //public ContourInfo blobInfo;
 
-    public Normalized normalized;
-
 
     public PContour(PContourCreator pBlobCreator) {
         init(pBlobCreator);
@@ -72,7 +70,6 @@ public class PContour {
     protected void init(PContourCreator pBlobCreator) {
 
         this.pBlobCreator = pBlobCreator;
-        normalized = new Normalized(this);
     }
 
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -444,110 +441,6 @@ public class PContour {
         g.popMatrix();
     }
 
-    // =============================================================
-
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-    // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-    public class Normalized {
-
-        PContour root;
-
-        boolean cornerVectorsComputed;
-        List<PVector> cornerVectors;
-
-        Normalized(PContour root) {
-            this.root = root;
-        }
-
-
-        // . . . . . . . . . . . . . . . . . . . . . . .
-
-        public List<PVector> getCornerVectors() {
-             /*
-             if (cornerVectorsComputed) return cornerVectors;
-
-             List<PVector> rawValues = root.getCornerVectors();
-
-             cornerVectors = blobData.cornerVectorsNormalizedDivisor.getSubListGetter(rawValues.size());
-
-             for (int i = 0; i < rawValues.size(); i++) {
-
-                 PVector raw = rawValues.get(i);
-                 cornerVectors.get(i).set(PApplet.norm(raw.x, 0, imageWidth), PApplet.norm(raw.y, 0, imageHeight), raw.z);
-             }
-
-            return cornerVectors;
-            */
-            return null;
-
-        }
-
-
-        // . . . . . . . . . . . . . . . . . . . . . . .
-
-        // is there any reason to have draw methods?
-
-
-//        public void draw(PGraphics g) {
-//            root.draw(g);
-//        }
-//
-//
-//        // . . . . . . . . . . . . . . . . . . . . . . .
-//
-//
-//        public void draw(PGraphics g, float x, float y, float w, float h) {
-//        /*
-//        if (normalized.cornerVectorsComputed) {
-//            normalized.draw(g, x, y, w, h);
-//        }
-//        else {
-//            System.err.println("ERROR in Blob: normalized vectors are not computed!\nCall either normalized.draw()");
-//            Thread.dumpStack();
-//            System.exit(1);
-//        }
-//        */
-//        }
-//
-//
-//        // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-//
-//
-//        public void drawBounding (PGraphics g) {
-//        /*
-//
-//        if (!cornerVectorsComputed && normalized.cornerVectorsComputed) {
-//            normalized.drawBounding(g);
-//        }
-//        else {
-//            super.drawBounding(g, 0, 0, 1, 1);
-//        }
-//        */
-//
-//        }
-//
-//
-//
-//        // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-//
-//        public void drawBounding (PGraphics g, float x, float y, float w, float h) {
-//        /*
-//        if (normalized.cornerVectorsComputed) {
-//            normalized.drawBounding(g, x, y, w, h);
-//        }
-//        else {
-//            System.err.println("ERROR in Blob: normalized vectors are not computed!\nCall either normalized.drawBounding()");
-//            Thread.dumpStack();
-//            System.exit(1);
-//        }
-//        */
-//        }
-
-
-
-    }
 
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
