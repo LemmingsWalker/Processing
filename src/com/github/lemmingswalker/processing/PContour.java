@@ -33,7 +33,7 @@ public class PContour {
     SubListGetter<PVector> edgeVectorsGetter;
     boolean edgeVectorsComputed;
 
-    protected int minX, minY, maxX, maxY;
+    protected float minX, minY, maxX, maxY;
 
     // a containing blob is within the bounds of this blob
     ArrayList<PContour> containingBlobs = new ArrayList<PContour>();
@@ -51,6 +51,9 @@ public class PContour {
     // so to have this set computeEnclosedBlobsStep1 has to
     // be called
     PContour enclosingParent;
+
+
+    boolean normalized;
 
 
     // this is used by the blobManager
@@ -153,6 +156,8 @@ public class PContour {
         edgeVectorsGetter = null;
 
         depth = 0;
+
+        normalized = false;
     }
 
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -237,6 +242,33 @@ public class PContour {
 
 
     // . . . . . . . . . . . . . . . . . . . . . . .
+
+    public void normalize() {
+
+        if (normalized) return;
+
+        for (PVector v : getCornerVectors()) {
+            v.x /= imageWidth;
+            v.y /= imageHeight;
+        }
+        if (pBlobCreator.isComputeEdgeData()) {
+            for (PVector v : edgeVectorsGetter.getSubList()) {
+                v.x /= imageWidth;
+                v.y /= imageHeight;
+            }
+        }
+
+        minX /= imageHeight;
+        minY /= imageHeight;
+        maxX /= imageWidth;
+        maxY /= imageHeight;
+
+        normalized = true;
+
+    }
+
+    // . . . . . . . . . . . . . . . . . . . . . . .
+
 
 
     public List<PVector> getEdgeVectors() {
@@ -392,17 +424,17 @@ public class PContour {
 
     public void draw(PGraphics g, float x, float y, float w, float h) {
 
-        if (x == 0 && y == 0 && w == imageWidth && h == imageHeight) draw(g);
-
-        float xm = w / imageWidth;
-        float ym = h / imageHeight;
+        if (!normalized && x == 0 && y == 0 && w == imageWidth && h == imageHeight) draw(g);
 
         g.pushMatrix();
         g.translate(x, y);
 
+        float xm = normalized ? w : w / imageWidth;
+        float ym = normalized ? h : h / imageHeight;
+
         g.beginShape();
         for (PVector v : getCornerVectors()) {
-            g.vertex(v.x*xm, v.y*ym);
+            g.vertex(v.x * xm, v.y * ym);
         }
         g.endShape(PConstants.CLOSE);
 
@@ -428,8 +460,8 @@ public class PContour {
 
     public void drawBounding (PGraphics g, float x, float y, float w, float h) {
 
-        float xm = w / imageWidth;
-        float ym = h / imageHeight;
+        float xm = normalized ? w : w / imageWidth;
+        float ym = normalized ? h : h / imageHeight;
 
         g.pushMatrix();
         g.translate(x, y);
