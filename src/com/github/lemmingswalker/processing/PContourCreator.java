@@ -545,67 +545,49 @@ public class PContourCreator implements ContourCreator {
 
         currentBlob.prepareForUse();
 
-
-
-
-
-        // todo, problem, we need access to threshold checker
-//        // check if it's an outerContour or not
-//        // we do this by checking pixels outside the contour
-//        // from the most left corner
-//
-//        valueDown = thresholdChecker.check(pixels[blob.minXCornerPixelIndex+DOWN]);
-//        valueUp = thresholdChecker.check(pixels[blob.minXCornerPixelIndex+UP]);
-//        valueLeft = thresholdChecker.check(pixels[blob.minXCornerPixelIndex+LEFT]);
-//        // we don't check for right!
-//
-//        downIsFree = valueDown < threshold;
-//        upIsFree =  valueUp < threshold;
-//        leftIsFree = valueLeft < threshold;
-//
-//        blob.isOuterContour = upIsFree || leftIsFree || downIsFree;
-
-
-
         // check if the blob is valid
         if (currentBlob.getWidth() >= minContourWidth && currentBlob.getHeight() >= minContourHeight) {
 
             boolean widthOk = (maxContourWidth <= 0 || currentBlob.getWidth() <= maxContourWidth);
             boolean heightOk = (maxContourHeight <= 0 || currentBlob.getHeight() <= maxContourHeight);
 
-            if (widthOk && heightOk) {
-                //blobData.nOfBlobs++;
+            if (!widthOk || !heightOk) {
+                returnLastGivenBlob();
             }
-            else {
-                // will save data so we can check for a edge hit later
-                // so we don't recreate the same blob every time
-                // we will only do it for blobs that are to large
-                // blobs that are to small don't take long to recreate anyway
-                if (currentBlob.getWidth() > maxContourWidth || currentBlob.getHeight() > maxContourHeight ) {
-                    returnLastGivenBlob();
-                }
-            }
+
         }
 
 
     }
 
-    @Override
-    public void finishOfScan() {
-        // we do nothing...
-    }
 
     @Override
-    public void addToCornerIndexes(int index) {
-        currentBlob.addToCornerIndexes(index);
+    public void addCorner(int index, int x, int y) {
+        //System.out.println(x+" "+y);
+        currentBlob.addCorner(index, x, y);
     }
 
     @Override
     public void addEdge(int index, int x, int y) {
         contourExistCheckData[index] = contourExistCheckValue;
         if (computeEdgeData) {
-            currentBlob.addToEdgeIndexes(index);
+            currentBlob.addEdge(index, x, y);
         }
+    }
+
+    @Override
+    public void setMinAndMaxCornerValues(int minXIndex, int minX, int minYIndex, int minY, int maxXIndex, int maxX, int maxYIndex, int maxY) {
+       currentBlob.setMinAndMaxCornerValues(minXIndex, minX, minYIndex, minY, maxXIndex, maxX, maxYIndex, maxY);
+    }
+
+    @Override
+    public void isOuterContour(boolean isOuterContour) {
+         currentBlob.isOuterContour = isOuterContour;
+    }
+
+    @Override
+    public void finishOfScan() {
+        // we do nothing...
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.lemmingswalker.processing;
 
 import com.github.lemmingswalker.SubListGetter;
+import com.github.lemmingswalker.ThresholdChecker;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -19,8 +20,7 @@ import static processing.core.PConstants.*;
  */
 public class PContour {
 
-
-
+    // We need this since a lot of data is stored there
     PContourCreator pBlobCreator;
 
     int imageWidth;
@@ -33,11 +33,7 @@ public class PContour {
     SubListGetter<PVector> edgeVectorsGetter;
     boolean edgeVectorsComputed;
 
-
     protected int minX, minY, maxX, maxY;
-
-    // used to decide if it's a outer contour (only minX...)
-    public int minXCornerPixelIndex, minYCornerPixelIndex, maxXCornerPixelIndex, maxYCornerPixelIndex;
 
     // a containing blob is within the bounds of this blob
     ArrayList<PContour> containingBlobs = new ArrayList<PContour>();
@@ -175,18 +171,12 @@ public class PContour {
 
         // the last one should be connected to the first
         PVector pre = cornerVectors.get(cornerVectors.size() -1);
-        PVector cur;
-
-        for (int i = 0; i < cornerVectors.size(); i++) {
-
-            cur = cornerVectors.get(i);
+        for (PVector cur : cornerVectors) {
 
             if(PContour.onLine(pre, cur, x, y, edgeHitEpsilon)) {
                 return true;
             }
-
             pre = cur;
-
         }
         return false;
     }
@@ -209,18 +199,27 @@ public class PContour {
 
 
 
-    protected void addToCornerIndexes(int index) {
-
-        // we store the index in the z coordinate of the PVector
-        pBlobCreator.cornerVectorsDivisor.getNext().z = index;
+    protected void addCorner(int index, int x, int y) {
+        pBlobCreator.cornerVectorsDivisor.getNext().set(x, y, 0);
     }
-    
     
     // . . . . . . . . . . . . . . . . . . . . . . .
 
+    protected void addEdge(int index, int x, int y) {
+        pBlobCreator.edgeVectorsDivisor.getNext().set(x, y, 0);
+    }
 
-    protected void addToEdgeIndexes(int index) {
-        pBlobCreator.edgeVectorsDivisor.getNext().z = index;
+    // . . . . . . . . . . . . . . . . . . . . . . .
+
+    public void setMinAndMaxCornerValues(int minXIndex, int minX, int minYIndex, int minY, int maxXIndex, int maxX, int maxYIndex, int maxY) {
+
+        // screw the indexes
+
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+
     }
 
     // . . . . . . . . . . . . . . . . . . . . . . .
@@ -228,60 +227,6 @@ public class PContour {
     protected void prepareForUse() {
 
         cornerVectorsGetter = pBlobCreator.cornerVectorsDivisor.getSubListGetter();
-        List<PVector> cornerVectors = getCornerVectors();
-
-        minX = minY = MAX_INT;
-        maxX = maxY = MIN_INT;
-
-        minXCornerPixelIndex = minYCornerPixelIndex = maxXCornerPixelIndex = maxYCornerPixelIndex = -1;
-
-        for (PVector v : cornerVectors) {
-
-            int cornerIndex = (int) v.z;
-
-            int x = cornerIndex % imageWidth;
-            int y = (cornerIndex - x) / imageWidth;
-
-            v.x = x;
-            v.y = y;
-
-            if (x < minX ) {
-                minX = x;
-                minXCornerPixelIndex = cornerIndex;
-            }
-            else if (x > maxX ) {
-                maxX = x;
-                maxXCornerPixelIndex = cornerIndex;
-            }
-            if (y < minY ) {
-                minY = y;
-                minYCornerPixelIndex = cornerIndex;
-            }
-            else if (y > maxY ) {
-                maxY = y;
-                maxYCornerPixelIndex = cornerIndex;
-            }
-
-            // let's set z to 0
-            // so it doesn't confuse the user
-            // and gives him the control of using the z value
-            // if we want to give the user access to the pixel index
-            // then in this method would be a good place
-            v.z = 0;
-
-        }
-
-        // set min and max xy
-        minX = minXCornerPixelIndex % imageWidth;
-
-        int x = minYCornerPixelIndex % imageWidth;
-        minY = (minYCornerPixelIndex - x) / imageWidth;
-
-        maxX = maxXCornerPixelIndex % imageWidth;
-
-        x = maxYCornerPixelIndex % imageWidth;
-        maxY = (maxYCornerPixelIndex - x) / imageWidth;
-        // end of setting min and max xy
 
         if (pBlobCreator.computeEdgeData) {
             edgeVectorsGetter = pBlobCreator.edgeVectorsDivisor.getSubListGetter();
@@ -303,18 +248,6 @@ public class PContour {
         if (!pBlobCreator.computeEdgeData) {
             System.err.println("Error: computeEdgeData is false, maybe you need to set blobData.setComputeEdgeData(true)?");
             return null;
-        }
-
-        if (!edgeVectorsComputed) {
-
-            List<PVector> edgeVectors = edgeVectorsGetter.getSubList();
-
-            for (PVector v : edgeVectors) {
-                v.x = (int)v.z % imageWidth;
-                v.y = ((int)v.z - v.x) / imageWidth;
-            }
-
-            edgeVectorsComputed = true;
         }
 
         return edgeVectorsGetter.getSubList();
@@ -430,7 +363,7 @@ public class PContour {
 
     public boolean hasParent() {
         pBlobCreator.computeEnclosedBlobs();
-        return enclosingParent == null ? false : true;
+        return enclosingParent != null;
     }
 
 
@@ -438,7 +371,7 @@ public class PContour {
 
     public boolean hasChildren() {
         pBlobCreator.computeEnclosedBlobs();
-        return enclosedBlobs.size() > 0 ? true : false;
+        return enclosedBlobs.size() > 0;
     }
 
     // =============================================================
