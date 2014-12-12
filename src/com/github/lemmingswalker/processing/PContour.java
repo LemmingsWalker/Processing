@@ -20,8 +20,6 @@ import static processing.core.PConstants.*;
 public class PContour {
 
 
-    // no use atm
-    int scanningStartIndex;
 
     PContourCreator pBlobCreator;
 

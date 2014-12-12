@@ -529,9 +529,9 @@ public class PContourCreator implements ContourCreator {
 
     @Override
     public void startContour(int startIndex, int[] pixels, int imageWidth, int imageHeight) {
+       // screw startIndex
        currentBlob = getOrCreateBlob();
        currentBlob.reset();
-       currentBlob.scanningStartIndex = startIndex;
        currentBlob.setImageSize(imageWidth, imageHeight);
     }
 
