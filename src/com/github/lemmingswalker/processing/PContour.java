@@ -152,6 +152,7 @@ public class PContour {
         cornerVectorsGetter = null;
         edgeVectorsGetter = null;
 
+        depth = 0;
     }
 
     // . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
