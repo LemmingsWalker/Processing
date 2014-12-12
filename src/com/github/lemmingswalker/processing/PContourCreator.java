@@ -82,10 +82,10 @@ public class PContourCreator implements ContourCreator {
     //int imageWidth, imageHeight;
 
 
-    // we store here for every edge index the contourCheckValue
+    // we store here for every edge index the contourExistCheckValue
     // this we we can check fast if a blob exists or not
-    int[] contourCheck;
-    int contourCheckValue;
+    int[] contourExistCheckData;
+    int contourExistCheckValue;
 
 
 
@@ -511,10 +511,10 @@ public class PContourCreator implements ContourCreator {
         init();
         reset();
 
-        if (contourCheck == null || contourCheck.length < pixels.length) {
-            contourCheck = new int[pixels.length];
+        if (contourExistCheckData == null || contourExistCheckData.length < pixels.length) {
+            contourExistCheckData = new int[pixels.length];
         }
-        contourCheckValue++;
+        contourExistCheckValue++;
 
         //this.pixels = pixels;
         //this.imageWidth = imageWidth;
@@ -524,7 +524,7 @@ public class PContourCreator implements ContourCreator {
     @Override
     public boolean checkForExistingBlob(int index, int x, int y) {
         //return pointOnEdgeBlob(x, y, 0.5f) || pointOnEdgeRejectedBlob(x, y, 0.5f);
-        return contourCheck[index] == contourCheckValue;
+        return contourExistCheckData[index] == contourExistCheckValue;
     }
 
     @Override
@@ -601,8 +601,8 @@ public class PContourCreator implements ContourCreator {
     }
 
     @Override
-    public void addToEdgeIndexes(int index) {
-        contourCheck[index] = contourCheckValue;
+    public void addEdge(int index, int x, int y) {
+        contourExistCheckData[index] = contourExistCheckValue;
         if (computeEdgeData) {
             currentBlob.addToEdgeIndexes(index);
         }
