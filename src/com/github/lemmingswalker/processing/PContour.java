@@ -408,6 +408,7 @@ public class PContour {
     // =================== D R A W   M E T H O D S =================
     // =============================================================
 
+    // todo, in all draw methods, check if g is 3d? if so use z?
     public void draw(PGraphics g) {
 
         g.beginShape();
@@ -426,11 +427,11 @@ public class PContour {
 
         if (!normalized && x == 0 && y == 0 && w == imageWidth && h == imageHeight) draw(g);
 
-        g.pushMatrix();
-        g.translate(x, y);
-
         float xm = normalized ? w : w / imageWidth;
         float ym = normalized ? h : h / imageHeight;
+
+        g.pushMatrix();
+        g.translate(x, y);
 
         g.beginShape();
         for (PVector v : getCornerVectors()) {
@@ -439,6 +440,73 @@ public class PContour {
         g.endShape(PConstants.CLOSE);
 
         g.popMatrix();
+
+    }
+
+
+    // . . . . . . . . . . . . . . . . . . . . . . .
+
+    public void drawSmooth(PGraphics g, float tightness) {
+
+        g.pushStyle();
+        g.curveTightness(tightness);
+        g.beginShape();
+
+        List<PVector> vecs = getCornerVectors();
+
+        PVector a = vecs.get(vecs.size()-1); // last
+        g.curveVertex(a.x, a.y);
+
+        for (PVector v : vecs) {
+            g.curveVertex(v.x, v.y);
+        }
+
+        a = vecs.get(0);
+        g.curveVertex(a.x, a.y);
+        a = vecs.get(1);
+        g.curveVertex(a.x, a.y);
+
+        // close it or not?
+        g.endShape(PConstants.CLOSE);
+        g.popStyle();
+    }
+
+
+    // . . . . . . . . . . . . . . . . . . . . . . .
+
+
+    public void drawSmooth(PGraphics g, float x, float y, float w, float h, float tightness) {
+
+        if (!normalized && x == 0 && y == 0 && w == imageWidth && h == imageHeight) drawSmooth(g, tightness);
+
+        List<PVector> vecs = getCornerVectors();
+
+        float xm = normalized ? w : w / imageWidth;
+        float ym = normalized ? h : h / imageHeight;
+
+        g.pushStyle();
+        g.curveTightness(tightness);
+        g.pushMatrix();
+        g.translate(x, y);
+
+        g.beginShape();
+
+        PVector a = vecs.get(vecs.size()-1); // last
+        g.curveVertex(a.x, a.y);
+
+        for (PVector v : vecs) {
+            g.curveVertex(v.x * xm, v.y * ym);
+        }
+
+        a = vecs.get(0);
+        g.curveVertex(a.x, a.y);
+        a = vecs.get(1);
+        g.curveVertex(a.x, a.y);
+
+        g.endShape(PConstants.CLOSE);
+
+        g.popMatrix();
+        g.popStyle();
 
     }
 
