@@ -6,6 +6,7 @@ import processing.core.PGraphics;
 import processing.core.PImage;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by doekewartena on 12/9/14.
@@ -34,6 +35,13 @@ public class PContourFinder extends ContourFinder {
 
     // . . . . . . . . . . . . . . . . . . . . . . . .
 
+    public ArrayList<PContour> getContours() {
+        return pContourCreator.getBlobs();
+    }
+
+    // . . . . . . . . . . . . . . . . . . . . . . . .
+
+
     public void drawContours() {
         pContourCreator.drawBlobs(p.g);
     }
@@ -45,7 +53,7 @@ public class PContourFinder extends ContourFinder {
 
     public void drawScanLines(PGraphics g, int w, int h) {
 
-        if (overX()) {
+        if (isScanOverX()) {
             drawScanLinesOverX(g, w, h);
         }
         else {
