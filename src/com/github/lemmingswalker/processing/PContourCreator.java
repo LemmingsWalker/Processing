@@ -84,6 +84,11 @@ public class PContourCreator implements ContourCreator {
 
     // we store here for every edge index the contourExistCheckValue
     // this we we can check fast if a blob exists or not
+    // it's not used atm but we might could give access
+    // to the user
+    // does it make sense? For selecting clicking a edge is kind of shit
+    // if we will ise this, we could create another array that holds the index of the blob
+    // that way we can return the blob with 2 checks
     int[] contourExistCheckData;
     int contourExistCheckValue;
 
@@ -477,7 +482,10 @@ public class PContourCreator implements ContourCreator {
 
 
 
-
+    public boolean checkForExistingBlob(int index, int x, int y) {
+        //return pointOnEdgeBlob(x, y, 0.5f) || pointOnEdgeRejectedBlob(x, y, 0.5f);
+        return contourExistCheckData[index] == contourExistCheckValue;
+    }
 
 
 
@@ -519,12 +527,6 @@ public class PContourCreator implements ContourCreator {
         //this.pixels = pixels;
         //this.imageWidth = imageWidth;
         //this.imageHeight = imageHeight;
-    }
-
-    @Override
-    public boolean checkForExistingBlob(int index, int x, int y) {
-        //return pointOnEdgeBlob(x, y, 0.5f) || pointOnEdgeRejectedBlob(x, y, 0.5f);
-        return contourExistCheckData[index] == contourExistCheckValue;
     }
 
     @Override
